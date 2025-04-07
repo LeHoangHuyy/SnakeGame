@@ -2,8 +2,6 @@ package model;
 
 import enums.Direction;
 import interfaces.CollisionChecker;
-import interfaces.SelfCollisionChecker;
-import interfaces.WallCollisionChecker;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;

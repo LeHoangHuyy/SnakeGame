@@ -1,8 +1,9 @@
-package interfaces;
+package model;
 
 import java.awt.Point;
 import java.util.List;
-import model.Snake;
+
+import interfaces.CollisionChecker;
 
 public class SelfCollisionChecker implements CollisionChecker {
 
