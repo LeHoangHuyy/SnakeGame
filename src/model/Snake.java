@@ -76,24 +76,4 @@ public class Snake implements Movable {
     public boolean isEating(Point foodPosition) {
         return body.get(0).equals(foodPosition);
     }
-
-    // // Kiểm tra va chạm với tường và bản thân rắn
-    // public boolean checkCollision(int gameWidth, int gameHeight) {
-    //     Point head = body.get(0);
-    //     int headX = head.x;
-    //     int headY = head.y;
-
-    //     if (headX < 0 || headX >= gameWidth || headY < 0 || headY >= gameHeight) {
-    //         return true;
-    //     }
-
-    //     for (int i = 1; i < body.size(); i++) {
-    //         if (head.equals(body.get(i))) {
-    //             return true;
-    //         }
-    //     }
-
-
-    //     return false;
-    // }
 }
