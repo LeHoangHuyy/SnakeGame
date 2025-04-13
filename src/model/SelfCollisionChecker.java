@@ -11,8 +11,8 @@ public class SelfCollisionChecker implements CollisionChecker {
     public boolean checkCollision(Snake snake, int gameWidth, int gameHeight) {
         Point head = snake.getHeadPosition();
         List<Point> body = snake.getBody();
-        for (int i = 1; i < body.size(); i++){
-            if (head.equals(body.get(i))){
+        for (int i = 1; i < body.size(); i++) {
+            if (head.equals(body.get(i))) {
                 return true;
             }
         }

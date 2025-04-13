@@ -25,12 +25,13 @@ public class Food implements Eatable {
     // Trả về vị trí thức ăn
     public Point getPosition() {
         return position;
-    }  
+    }
 
     // Khởi tạo thức ăn rơi ra ngẫu nhiên và không nằm trên thân rắn
     public final void createRandomPosition(List<Point> snakeBody, List<Point> obstacles) {
         int foodX, foodY;
         boolean onSnake, onObstacle;
+
         do {
             foodX = random.nextInt(gameWidth / tileSize) * tileSize;
             foodY = random.nextInt(gameHeight / tileSize) * tileSize;
@@ -49,9 +50,9 @@ public class Food implements Eatable {
             }
 
             // Kiểm tra thức ăn có nằm trên vật cản không
-            if (obstacles != null){
-                for (Point obstaclePart : obstacles){
-                    if (position.equals(obstaclePart)){
+            if (obstacles != null) {
+                for (Point obstaclePart : obstacles) {
+                    if (position.equals(obstaclePart)) {
                         onObstacle = true;
                         break;
                     }

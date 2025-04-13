@@ -5,6 +5,7 @@ import interfaces.CollisionChecker;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class GameLogic {
     private final int tileSize;             // Kích cỡ ô vuông chứa 1 đốt rắn
     private int score;                      // Điểm
     private boolean isRunning;              // Kiểm tra di chuyển 
-    private Snake snake;            
+    private Snake snake;
     private final int snakeLength = 6;      // Khởi tạo chiều dài rắn ban đầu
     private Food normalfood;
     private SpecialFood specialFood;
@@ -42,13 +43,14 @@ public class GameLogic {
         collisionChecker.add(new SelfCollisionChecker());      // Va cạm với bản thân
         collisionChecker.add(new ObstacleCollisionChecker(obstacles));      // Va chạm vật cản
 
-        int startX = gameWidth / 2 / tileSize * tileSize;       
+        int startX = gameWidth / 2 / tileSize * tileSize;
         int startY = gameHeight / 2 / tileSize * tileSize;
         snake = new Snake(startX, startY, snakeLength, tileSize);       // Khởi tạo rắn ở giữa màn hình
 
         normalfood = new Food(gameWidth, gameHeight, tileSize);
-        specialFood = new SpecialFood(gameWidth, gameHeight, tileSize);
         normalfood.createRandomPosition(snake.getBody(), obstacles);
+
+        specialFood = new SpecialFood(gameWidth, gameHeight, tileSize);
         specialFood.getPosition().setLocation(-1, -1);          // Đặt thức ăn đặc biệt ở ngoài map
 
         score = 0;
@@ -59,21 +61,24 @@ public class GameLogic {
     public void initialObstracles() throws IOException {
         obstacles = new ArrayList<>();
         File file = new File("src\\text\\map.txt");     // Đường dẫn tương đối
-        System.out.println(System.getProperty("user.dir"));     // Kiểm mày đang ở vị trí nào trên cấu trúc thư mục
+        //System.out.println(System.getProperty("user.dir"));     // Kiểm tra mày đang ở vị trí nào trên cấu trúc thư mục
+
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             int row = 0;
-            while ((line = br.readLine()) != null){
+
+            while ((line = br.readLine()) != null) {
                 String[] elements = line.split("\\s+");
-                for (int i = 0; i < elements.length; i++){
-                    if (elements[i].equals("1")){
+
+                for (int i = 0; i < elements.length; i++) {
+                    if (elements[i].equals("1")) {
                         obstacles.add(new Point(row * tileSize, i * tileSize));
                     }
                 }
                 row++;
             }
-        } catch (IOException e){
-            throw new IOException("File Not Found", e);
+        } catch (IOException e) {
+            throw new FileNotFoundException();
         }
     }
 
@@ -88,27 +93,28 @@ public class GameLogic {
         if (snake.isEating(normalfood.getPosition())) {     // Nếu rắn ăn phải thức ăn thường
             normalfood.onEat(snake, this);          // Rắn ăn thức ăn
             foodCounter++;                      // Tăng biến đếm nếu rắn không ăn thức ăn đặc biệt
-            if (foodCounter % specialFoodInterval == 0){        // Đến 1 mức điểm nào đó thì xuất hiện thức ăn đặc biệt
-                specialFood.createRandomPosition(snake.getBody(), obstacles);     
+
+            if (foodCounter % specialFoodInterval == 0) {        // Đến 1 mức điểm nào đó thì xuất hiện thức ăn đặc biệt
+                specialFood.createRandomPosition(snake.getBody(), obstacles);
             } else {                          // Không đến mức điểm nào đó thì thức ăn xuất hiện ở ngoài map
                 specialFood.getPosition().setLocation(-1, -1);
             }
-        } else if (snake.isEating(specialFood.getPosition())){      // Nếu ăn ăn thức ăn đặc biệt
+        } else if (snake.isEating(specialFood.getPosition())) {      // Nếu ăn ăn thức ăn đặc biệt
             specialFood.onEat(snake, this);     // Rắn ăn thức ăn
             foodCounter = 0;                // Rest biến đếm về 0
             normalfood.createRandomPosition(snake.getBody(), obstacles);  // Xuất hiện thức ăn thường sau khi ăn food đặc biệt
             specialFood.getPosition().setLocation(-1, -1);     // Food đặc biệt xuất hiện ở ngoài map
         }
 
-        if (checkCollision()){          // Check  va chạm
+        if (checkCollision()) {          // Check  va chạm
             isRunning = false;
         }
     }
 
     // Kiểm tra va chạm
-    public boolean checkCollision(){
-        for (CollisionChecker checker : collisionChecker){
-            if (checker.checkCollision(snake, gameWidth, gameHeight)){
+    public boolean checkCollision() {
+        for (CollisionChecker checker : collisionChecker) {
+            if (checker.checkCollision(snake, gameWidth, gameHeight)) {
                 return true;
             }
         }
@@ -167,7 +173,7 @@ public class GameLogic {
     }
 
     // Tăng pointValue điểm
-    public void increaseScore(int pointValue){
+    public void increaseScore(int pointValue) {
         score += pointValue;
     }
 

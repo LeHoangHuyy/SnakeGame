@@ -27,7 +27,6 @@ public class SnakeGame extends JFrame {
             setLocationRelativeTo(null);
             setVisible(true);
         } catch (IOException e) {
-            System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
         }
     }
