@@ -19,7 +19,7 @@ public class Food implements Eatable {
         this.gameHeight = gameHeight;
         this.tileSize = tileSize;
         this.random = new Random();
-        createRandomPosition(null);
+        createRandomPosition(null, null);
     }
 
     // Trả về vị trí thức ăn
@@ -28,14 +28,15 @@ public class Food implements Eatable {
     }  
 
     // Khởi tạo thức ăn rơi ra ngẫu nhiên và không nằm trên thân rắn
-    public final void createRandomPosition(List<Point> snakeBody) {
+    public final void createRandomPosition(List<Point> snakeBody, List<Point> obstacles) {
         int foodX, foodY;
-        boolean onSnake;
+        boolean onSnake, onObstacle;
         do {
             foodX = random.nextInt(gameWidth / tileSize) * tileSize;
             foodY = random.nextInt(gameHeight / tileSize) * tileSize;
             position = new Point(foodX, foodY);
             onSnake = false;
+            onObstacle = false;
 
             // Kiểm tra thức ăn có nằm trên thân rắn không
             if (snakeBody != null) {
@@ -46,7 +47,17 @@ public class Food implements Eatable {
                     }
                 }
             }
-        } while (onSnake);
+
+            // Kiểm tra thức ăn có nằm trên vật cản không
+            if (obstacles != null){
+                for (Point obstaclePart : obstacles){
+                    if (position.equals(obstaclePart)){
+                        onObstacle = true;
+                        break;
+                    }
+                }
+            }
+        } while (onSnake || onObstacle);
     }
 
     // Thức ăn đã được rắn ăn
@@ -54,6 +65,6 @@ public class Food implements Eatable {
     public void onEat(Snake snake, GameLogic gameLogic) {
         snake.grow();
         gameLogic.increaseScore();
-        createRandomPosition(snake.getBody());
+        createRandomPosition(snake.getBody(), gameLogic.getObstacles());
     }
 }

@@ -30,9 +30,17 @@ public class GamePanel extends JPanel {
     private void draw(Graphics g) {
         if (logic.isRunning()) {
             // Vẽ thức ăn
-            g.setColor(Color.red);
             Point food = logic.getFoodPosition();
-            g.fillOval(food.x, food.y, logic.getTileSize(), logic.getTileSize());
+            if (food.x >= 0 && food.y >= 0){
+                // Vẽ thức ăn đặc biệt
+                if (logic.getFoodCounter() % logic.getSpecialFoodInterval() == 0 && logic.getFoodCounter() != 0){
+                    g.setColor(Color.yellow);
+                    g.fillOval(food.x, food.y, logic.getTileSize() + 5, logic.getTileSize() + 5);
+                } else {        // Vẽ thức ăn thường
+                    g.setColor(Color.red);
+                    g.fillOval(food.x, food.y, logic.getTileSize(), logic.getTileSize());
+                }
+            }
 
             // Vẽ rắn
             List<Point> snakeBody = logic.getSnakeBody();
@@ -40,6 +48,13 @@ public class GamePanel extends JPanel {
                 g.setColor(i == 0 ? Color.green : new Color(45, 180, 0));
                 Point part = snakeBody.get(i);
                 g.fillRect(part.x, part.y, logic.getTileSize(), logic.getTileSize());
+            }
+
+            // Vẽ vật cản
+            List<Point> obstacles = logic.getObstacles();
+            g.setColor(Color.gray);
+            for (Point obstacle : obstacles){
+                g.fillRect(obstacle.x, obstacle.y, logic.getTileSize(), logic.getTileSize());
             }
 
             // Vẽ điểm số

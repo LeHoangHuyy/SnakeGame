@@ -4,15 +4,19 @@ import interfaces.CollisionChecker;
 import java.awt.Point;
 import java.util.List;
 
-public class SelfCollisionChecker implements CollisionChecker {
+public class ObstacleCollisionChecker implements CollisionChecker {
+    
+    private final List<Point> obstacles;
+    
+    public ObstacleCollisionChecker(List<Point> obstacles){
+        this.obstacles = obstacles;
+    }
 
-    // Kiểm tra va chạm bản  thân 
     @Override
     public boolean checkCollision(Snake snake, int gameWidth, int gameHeight) {
         Point head = snake.getHeadPosition();
-        List<Point> body = snake.getBody();
-        for (int i = 1; i < body.size(); i++){
-            if (head.equals(body.get(i))){
+        for (Point obstacle : obstacles){
+            if (head.equals(obstacle)){
                 return true;
             }
         }
