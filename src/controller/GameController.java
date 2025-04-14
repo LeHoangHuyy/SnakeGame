@@ -21,6 +21,19 @@ public class GameController implements ActionListener, KeyListener {
         this.view = view;
         view.addKeyListener(this);
         this.timer = new Timer(delay, this);
+        view.getStart().getStartBT().addActionListener(e ->
+        {
+        	logic.resetGame(); // Reset game trước khi bắt đầu
+            view.showGame();
+            onstart();
+        });
+        view.getOver().getRestartBT().addActionListener(e ->
+        {
+        	logic.resetGame(); // Reset game trước khi restart
+            view.showGame();
+            onstart();
+        
+        });
     }
     public void onstart()
     {

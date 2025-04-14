@@ -36,7 +36,7 @@ public class SnakeGame extends JFrame {
 		logic = new GameLogic(gameWidth, gameHeight, tileSize);
 		//logic = new GameLogic(gameWidth, gameHeight, tileSize);
         MainPanel main = new MainPanel(logic);
-        MainController con= new MainController(main, logic, 150);
+        GameController con = new GameController(logic, main, 150);
         add(main);
 	}
 
