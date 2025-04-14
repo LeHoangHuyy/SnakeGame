@@ -3,7 +3,7 @@ package model;
 public class SuperFood extends Food {
 
 	public SuperFood(int gameWidth, int gameHeight, int tileSize) {
-		super(gameWidth, gameHeight, tileSize);
+		super(gameWidth, gameHeight, tileSize*2);
 		// TODO Auto-generated constructor stub
 	}
 

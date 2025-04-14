@@ -122,4 +122,9 @@ public class GameLogic {
             snake.setDirection(newDirection);
         }
     }
+    
+    public void resetGame() {
+        snake.getBody().clear();
+        initGame();
+    }
 }
