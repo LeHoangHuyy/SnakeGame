@@ -1,7 +1,7 @@
 package test;
 
 import controller.GameController;
-import controller.MainController;
+
 
 import java.awt.BorderLayout;
 import java.awt.Color;

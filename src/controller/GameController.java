@@ -32,7 +32,6 @@ public class GameController implements ActionListener, KeyListener {
         	logic.resetGame(); // Reset game trước khi restart
             view.showGame();
             onstart();
-        
         });
     }
     public void onstart()
