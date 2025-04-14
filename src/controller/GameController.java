@@ -49,13 +49,13 @@ public class GameController implements ActionListener, KeyListener {
         int keyCode = e.getKeyCode();
 
         switch (keyCode) {
-            case KeyEvent.VK_UP ->
+            case KeyEvent.VK_W ->
                 logic.changeDirection(Direction.UP);
-            case KeyEvent.VK_DOWN ->
+            case KeyEvent.VK_S ->
                 logic.changeDirection(Direction.DOWN);
-            case KeyEvent.VK_LEFT ->
+            case KeyEvent.VK_A ->
                 logic.changeDirection(Direction.LEFT);
-            case KeyEvent.VK_RIGHT ->
+            case KeyEvent.VK_D ->
                 logic.changeDirection(Direction.RIGHT);
         }
     }

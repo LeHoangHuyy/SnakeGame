@@ -23,7 +23,7 @@ public class GameLogic {
     private Food normalfood;
     private SpecialFood specialFood;
     private int foodCounter = 0;
-    private final int specialFoodInterval = 5;
+    private final int specialFoodInterval = 2;
     private List<CollisionChecker> collisionChecker;      // Kiểm tra va chạm gồm bản thân, tường,...
     private List<Point> obstacles;
 
@@ -93,11 +93,12 @@ public class GameLogic {
         if (snake.isEating(normalfood.getPosition())) {     // Nếu rắn ăn phải thức ăn thường
             normalfood.onEat(snake, this);          // Rắn ăn thức ăn
             foodCounter++;                      // Tăng biến đếm nếu rắn không ăn thức ăn đặc biệt
-
             if (foodCounter % specialFoodInterval == 0) {        // Đến 1 mức điểm nào đó thì xuất hiện thức ăn đặc biệt
                 specialFood.createRandomPosition(snake.getBody(), obstacles);
-            } else {                          // Không đến mức điểm nào đó thì thức ăn xuất hiện ở ngoài map
-                specialFood.getPosition().setLocation(-1, -1);
+                normalfood.getPosition().setLocation(-1, -1);
+            } else {
+            	normalfood.createRandomPosition(snake.getBody(), obstacles);
+                specialFood.getPosition().setLocation(-1, -1);// Không đến mức điểm nào đó thì thức ăn xuất hiện ở ngoài map
             }
         } else if (snake.isEating(specialFood.getPosition())) {      // Nếu ăn ăn thức ăn đặc biệt
             specialFood.onEat(snake, this);     // Rắn ăn thức ăn
@@ -105,8 +106,8 @@ public class GameLogic {
             normalfood.createRandomPosition(snake.getBody(), obstacles);  // Xuất hiện thức ăn thường sau khi ăn food đặc biệt
             specialFood.getPosition().setLocation(-1, -1);     // Food đặc biệt xuất hiện ở ngoài map
         }
-
-        if (checkCollision()) {          // Check  va chạm
+        // Check  va chạm
+        if (checkCollision()) {          
             isRunning = false;
         }
     }
@@ -178,10 +179,12 @@ public class GameLogic {
     }
 
     // Trả về vị trí thức ăn
-    public Point getFoodPosition() {
+    public Point getnormalfood() {
         return normalfood.getPosition();
     }
-
+    public Point getspecialFood() {
+        return specialFood.getPosition();
+    }
     // Trả về số điểm đã đếm
     public int getFoodCounter() {
         return foodCounter;
