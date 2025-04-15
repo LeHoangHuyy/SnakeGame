@@ -1,6 +1,8 @@
-package model;
+package model.collision;
 
 import interfaces.CollisionChecker;
+import model.Snake;
+
 import java.awt.Point;
 import java.util.List;
 

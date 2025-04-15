@@ -1,8 +1,9 @@
-package model;
+package model.collision;
 
 import java.awt.Point;
 
 import interfaces.CollisionChecker;
+import model.Snake;
 
 public class WallCollisionChecker implements CollisionChecker {
 

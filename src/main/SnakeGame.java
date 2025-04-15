@@ -1,3 +1,4 @@
+package main;
 
 import controller.GameController;
 import java.io.IOException;

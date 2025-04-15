@@ -10,6 +10,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import model.collision.ObstacleCollisionChecker;
+import model.collision.SelfCollisionChecker;
+import model.collision.WallCollisionChecker;
 
 public class GameLogic {
 
@@ -51,7 +54,6 @@ public class GameLogic {
         normalFood.createRandomPosition(snake.getBody(), obstacles);
 
         specialFood = new SpecialFood(gameWidth, gameHeight, tileSize);
-        specialFood.getPosition().setLocation(-1, -1);          // Đặt thức ăn đặc biệt ở ngoài map
 
         score = 0;
         isRunning = true;
@@ -60,7 +62,7 @@ public class GameLogic {
     // Tạo vật cả từ file
     public void initialObstracles() throws IOException {
         obstacles = new ArrayList<>();
-        File file = new File("src\\text\\map.txt");     // Đường dẫn tương đối
+        File file = new File("src\\resources\\map.txt");     // Đường dẫn tương đối
         //System.out.println(System.getProperty("user.dir"));     // Kiểm tra mày đang ở vị trí nào trên cấu trúc thư mục
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -96,15 +98,13 @@ public class GameLogic {
 
             if (foodCounter % specialFoodInterval == 0) {        // Đến 1 mức điểm nào đó thì xuất hiện thức ăn đặc biệt
                 specialFood.createRandomPosition(snake.getBody(), obstacles);
-
             } else {
-                specialFood.getPosition().setLocation(-1, -1);// Không đến mức điểm nào đó thì thức ăn xuất hiện ở ngoài map
+                normalFood.createRandomPosition(snake.getBody(), obstacles);
             }
         } else if (snake.isEating(specialFood.getPosition())) {      // Nếu ăn ăn thức ăn đặc biệt
             specialFood.onEat(snake, this);     // Rắn ăn thức ăn
             foodCounter = 0;                // Rest biến đếm về 0
             normalFood.createRandomPosition(snake.getBody(), obstacles);  // Xuất hiện thức ăn thường sau khi ăn food đặc biệt
-            specialFood.getPosition().setLocation(-1, -1);     // Food đặc biệt xuất hiện ở ngoài map
         }
         // Check  va chạm
         if (checkCollision()) {          
