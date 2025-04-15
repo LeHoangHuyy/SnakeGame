@@ -10,9 +10,8 @@ public class SpecialFood extends Food {
 
     @Override
     public void onEat(Snake snake, GameLogic gameLogic) {
-        snake.grow();
+        snake.grow(pointValue / 2 + 1);
         gameLogic.increaseScore(pointValue);
-        //createRandomPosition(snake.getBody(), gameLogic.getObstacles());
+        createRandomPosition(snake.getBody(), gameLogic.getObstacles());
     }
-
 }

@@ -20,10 +20,10 @@ public class GameLogic {
     private boolean isRunning;              // Kiểm tra di chuyển 
     private Snake snake;
     private final int snakeLength = 6;      // Khởi tạo chiều dài rắn ban đầu
-    private Food normalfood;
+    private Food normalFood;
     private SpecialFood specialFood;
-    private int foodCounter = 0;
-    private final int specialFoodInterval = 2;
+    private int foodCounter;
+    private final int specialFoodInterval = 3;
     private List<CollisionChecker> collisionChecker;      // Kiểm tra va chạm gồm bản thân, tường,...
     private List<Point> obstacles;
 
@@ -47,8 +47,8 @@ public class GameLogic {
         int startY = gameHeight / 2 / tileSize * tileSize;
         snake = new Snake(startX, startY, snakeLength, tileSize);       // Khởi tạo rắn ở giữa màn hình
 
-        normalfood = new Food(gameWidth, gameHeight, tileSize);
-        normalfood.createRandomPosition(snake.getBody(), obstacles);
+        normalFood = new Food(gameWidth, gameHeight, tileSize);
+        normalFood.createRandomPosition(snake.getBody(), obstacles);
 
         specialFood = new SpecialFood(gameWidth, gameHeight, tileSize);
         specialFood.getPosition().setLocation(-1, -1);          // Đặt thức ăn đặc biệt ở ngoài map
@@ -70,9 +70,9 @@ public class GameLogic {
             while ((line = br.readLine()) != null) {
                 String[] elements = line.split("\\s+");
 
-                for (int i = 0; i < elements.length; i++) {
-                    if (elements[i].equals("1")) {
-                        obstacles.add(new Point(row * tileSize, i * tileSize));
+                for (int col = 0; col < elements.length; col++) {
+                    if (elements[col].equals("1")) {
+                        obstacles.add(new Point(col * tileSize, row * tileSize));
                     }
                 }
                 row++;
@@ -90,20 +90,20 @@ public class GameLogic {
 
         snake.move();
 
-        if (snake.isEating(normalfood.getPosition())) {     // Nếu rắn ăn phải thức ăn thường
-            normalfood.onEat(snake, this);          // Rắn ăn thức ăn
+        if (snake.isEating(normalFood.getPosition())) {     // Nếu rắn ăn phải thức ăn thường
+            normalFood.onEat(snake, this);          // Rắn ăn thức ăn
             foodCounter++;                      // Tăng biến đếm nếu rắn không ăn thức ăn đặc biệt
+
             if (foodCounter % specialFoodInterval == 0) {        // Đến 1 mức điểm nào đó thì xuất hiện thức ăn đặc biệt
                 specialFood.createRandomPosition(snake.getBody(), obstacles);
-                normalfood.getPosition().setLocation(-1, -1);
+
             } else {
-            	normalfood.createRandomPosition(snake.getBody(), obstacles);
                 specialFood.getPosition().setLocation(-1, -1);// Không đến mức điểm nào đó thì thức ăn xuất hiện ở ngoài map
             }
         } else if (snake.isEating(specialFood.getPosition())) {      // Nếu ăn ăn thức ăn đặc biệt
             specialFood.onEat(snake, this);     // Rắn ăn thức ăn
             foodCounter = 0;                // Rest biến đếm về 0
-            normalfood.createRandomPosition(snake.getBody(), obstacles);  // Xuất hiện thức ăn thường sau khi ăn food đặc biệt
+            normalFood.createRandomPosition(snake.getBody(), obstacles);  // Xuất hiện thức ăn thường sau khi ăn food đặc biệt
             specialFood.getPosition().setLocation(-1, -1);     // Food đặc biệt xuất hiện ở ngoài map
         }
         // Check  va chạm
@@ -179,12 +179,13 @@ public class GameLogic {
     }
 
     // Trả về vị trí thức ăn
-    public Point getnormalfood() {
-        return normalfood.getPosition();
+    public Point getFoodPosition(){
+        if (foodCounter % specialFoodInterval == 0 && foodCounter != 0){
+            return specialFood.getPosition();
+        }
+        return normalFood.getPosition();
     }
-    public Point getspecialFood() {
-        return specialFood.getPosition();
-    }
+    
     // Trả về số điểm đã đếm
     public int getFoodCounter() {
         return foodCounter;

@@ -72,6 +72,12 @@ public class Snake implements Movable {
         body.add(new Point(body.get(body.size() - 1)));
     }
 
+    public void grow(int count) {
+        for (int i = 0; i < count; i++){
+            body.add(new Point(body.get(body.size() - 1)));
+        }
+    }
+
     // Kiểm tra đã ăn thức ăn chưa
     public boolean isEating(Point foodPosition) {
         return body.get(0).equals(foodPosition);

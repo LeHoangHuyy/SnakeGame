@@ -66,6 +66,6 @@ public class Food implements Eatable {
     public void onEat(Snake snake, GameLogic gameLogic) {
         snake.grow();
         gameLogic.increaseScore();
-        
+        createRandomPosition(snake.getBody(), gameLogic.getObstacles());
     }
 }
