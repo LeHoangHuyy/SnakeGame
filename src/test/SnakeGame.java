@@ -3,14 +3,14 @@ package test;
 import controller.GameController;
 
 
-import java.awt.BorderLayout;
+//import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.HeadlessException;
+//import java.awt.HeadlessException;
 
-import javax.swing.BoxLayout;
+//import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+//import javax.swing.JPanel;
 
 import model.GameLogic;
 import view.MainPanel;
