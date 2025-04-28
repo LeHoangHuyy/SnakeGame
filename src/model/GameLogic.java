@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import Ex.ObstacleEX;
+import Ex.SelfEX;
+import Ex.WallEX;
+
 public class GameLogic {
 
     private final int gameWidth;            // Chiều ngang màn hình game
@@ -23,9 +27,9 @@ public class GameLogic {
     private Food normalFood;
     private SpecialFood specialFood;
     private int foodCounter;
-    private final int specialFoodInterval = 3;
+    private final int specialFoodInterval = 1;
     private List<CollisionChecker> collisionChecker;      // Kiểm tra va chạm gồm bản thân, tường,...
-    private List<Point> obstacles;
+    private List<Point> obstacles; //map
 
     // Khởi tạo giá trị ban đầu
     public GameLogic(int gameWidth, int gameHeight, int tileSize) throws IOException {
@@ -83,22 +87,32 @@ public class GameLogic {
     }
 
     // Cập nhật con răn khi di chuyển
-    public void update() {
+    public void update() throws SelfEX, WallEX,ObstacleEX {
         if (!isRunning) {
             return;
         }
 
         snake.move();
-
+        try
+        {
+        	for (CollisionChecker checker : collisionChecker)
+            checker.checkCollision(snake, gameWidth, gameHeight);
+        }
+        finally {
+			
+		}
         if (snake.isEating(normalFood.getPosition())) {     // Nếu rắn ăn phải thức ăn thường
             normalFood.onEat(snake, this);          // Rắn ăn thức ăn
             foodCounter++;                      // Tăng biến đếm nếu rắn không ăn thức ăn đặc biệt
 
             if (foodCounter % specialFoodInterval == 0) {        // Đến 1 mức điểm nào đó thì xuất hiện thức ăn đặc biệt
                 specialFood.createRandomPosition(snake.getBody(), obstacles);
+                normalFood.getPosition().setLocation(-1, -1);
 
             } else {
                 specialFood.getPosition().setLocation(-1, -1);// Không đến mức điểm nào đó thì thức ăn xuất hiện ở ngoài map
+                normalFood.createRandomPosition(snake.getBody(), obstacles);
+                
             }
         } else if (snake.isEating(specialFood.getPosition())) {      // Nếu ăn ăn thức ăn đặc biệt
             specialFood.onEat(snake, this);     // Rắn ăn thức ăn
@@ -106,22 +120,29 @@ public class GameLogic {
             normalFood.createRandomPosition(snake.getBody(), obstacles);  // Xuất hiện thức ăn thường sau khi ăn food đặc biệt
             specialFood.getPosition().setLocation(-1, -1);     // Food đặc biệt xuất hiện ở ngoài map
         }
-        // Check  va chạm
-        if (checkCollision()) {          
-            isRunning = false;
-        }
+        
+//        catch (ObstacleEX e)
+//        {
+//        	snake.delete();
+//        	//score--;
+//        	if(score < 0 || snake.getBody().isEmpty())
+//        	{
+//        		score=0;
+//        		isRunning=false;
+//        		return;
+//        	}
+//        	snake.quaydau();
+//        	
+//        }
+//        catch(SelfEX e)
+//        {
+//        	isRunning =false;
+//        }
+//        catch(WallEX e)
+//        {
+//        	isRunning = false;
+//        }
     }
-
-    // Kiểm tra va chạm
-    public boolean checkCollision() {
-        for (CollisionChecker checker : collisionChecker) {
-            if (checker.checkCollision(snake, gameWidth, gameHeight)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // Thay đổi hướng di chuyển
     public void changeDirection(Direction newDirection) {
         Direction currDirection = snake.getDirection();
@@ -182,7 +203,8 @@ public class GameLogic {
     public Point getFoodPosition(){
         if (foodCounter % specialFoodInterval == 0 && foodCounter != 0){
             return specialFood.getPosition();
-        }
+        } 
+        
         return normalFood.getPosition();
     }
     
@@ -200,4 +222,74 @@ public class GameLogic {
     public List<Point> getObstacles() {
         return obstacles;
     }
+
+	public Snake getSnake() {
+		return snake;
+	}
+
+	public void setSnake(Snake snake) {
+		this.snake = snake;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+	public boolean getRunning()
+	{
+		return isRunning;
+	}
+	//quay dau
+	public void quaydau() {
+		switch (snake.getDirection()) {
+		case UP -> doichieu(Direction.RIGHT,Direction.LEFT);
+		case DOWN -> doichieu(Direction.RIGHT,Direction.LEFT);
+		case LEFT -> doichieu(Direction.UP,Direction.DOWN);
+		case RIGHT -> doichieu(Direction.UP,Direction.DOWN);
+		}
+	}
+	public void doichieu(Direction a, Direction b)
+	{
+    Point head = snake.getHeadPosition();
+      //Point headnext;
+      int newX = (int) head.getX();
+      int newY = (int) head.getY();
+      switch (a) {
+      case UP ->
+          newY -= snake.gettitle();
+      case DOWN ->
+          newY += snake.gettitle();
+      case LEFT ->
+          newX -= snake.gettitle();
+      case RIGHT ->
+          newX += snake.gettitle();
+      }
+      Point headnext = new Point(newX, newY);
+      
+      for (Point obstacle : obstacles) {
+          if (headnext.equals(obstacle)) {
+              snake.setDirection(b);
+              return;
+          }
+      }
+      if(snake.getBody().size()>3)
+      {
+      	
+          List<Point> body = snake.getBody();
+          for (int i = 1; i < body.size(); i++) {
+              if (headnext.equals(body.get(i))) {
+            	  snake.setDirection(b);
+                  return;
+                  
+              }
+          }
+      }
+      
+      snake.setDirection(a);
+		//move();
+	}
+    
 }

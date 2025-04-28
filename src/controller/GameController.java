@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.Timer;
+
+import Ex.ObstacleEX;
+import Ex.SelfEX;
+import Ex.WallEX;
 import model.GameLogic;
 import view.GamePanel;
 
@@ -26,7 +30,31 @@ public class GameController implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (logic.isRunning()) {
-            logic.update();
+            try {
+				logic.update();
+			} catch (SelfEX e1) {
+				
+				logic.setRunning(false);
+				e1.printStackTrace();
+			} catch (WallEX e1) {
+				
+				logic.setRunning(false);
+				e1.printStackTrace();
+			} catch (ObstacleEX e1) {
+				
+				logic.getSnake().delete();
+				
+	        	//score--;
+	        	if(logic.getScore() < 0 || logic.getSnake().getBody().isEmpty())
+	        	{
+	        		logic.setScore(0);
+	        		logic.setRunning(false);
+	        		
+	        	}
+	        	if(logic.getRunning())
+	        	logic.quaydau();
+	        	
+			}
             view.repaint();
             if (!logic.isRunning()) {
                 timer.stop();

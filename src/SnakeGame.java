@@ -26,12 +26,13 @@ public class SnakeGame extends JFrame {
             setResizable(false);
             setLocationRelativeTo(null);
             setVisible(true);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         new SnakeGame();
     }
 }
