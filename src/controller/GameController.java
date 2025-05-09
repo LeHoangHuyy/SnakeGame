@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+
 import javax.swing.Timer;
 
 import Ex.ObstacleEX;
@@ -12,19 +14,41 @@ import Ex.SelfEX;
 import Ex.WallEX;
 import model.GameLogic;
 import view.GamePanel;
+import view.MainPanel;
 
 public class GameController implements ActionListener, KeyListener {
 
     private final GameLogic logic;
-    private final GamePanel view;
+    private final MainPanel view;
     private final Timer timer;
 
-    public GameController(GameLogic logic, GamePanel view, int delay) {
+    public GameController(GameLogic logic, MainPanel view, int delay) {
         this.logic = logic;
         this.view = view;
         this.view.addKeyListener(this);
         this.timer = new Timer(delay, this);
-        this.timer.start();
+        view.getstartsreen().getStart().addActionListener(e ->
+        {
+        	
+            view.showGame();
+            start();
+        });
+        //this.timer.start();
+        view.getoversreen().getRestart().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					logic.resetGame();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} // Reset game trước khi bắt đầu
+	            view.showGame();
+	            start();
+			}
+		});
     }
 
     @Override
@@ -41,23 +65,28 @@ public class GameController implements ActionListener, KeyListener {
 				logic.setRunning(false);
 				e1.printStackTrace();
 			} catch (ObstacleEX e1) {
-				
-				logic.getSnake().delete();
-				
-	        	//score--;
-	        	if(logic.getScore() < 0 || logic.getSnake().getBody().isEmpty())
-	        	{
-	        		logic.setScore(0);
-	        		logic.setRunning(false);
-	        		
-	        	}
-	        	if(logic.getRunning())
-	        	logic.quaydau();
+				logic.setRunning(false);
+//				logic.getSnake().delete();
+//				
+//	        	//score--;
+//	        	if(logic.getScore() < 0 || logic.getSnake().getBody().isEmpty())
+//	        	{
+//	        		logic.setScore(0);
+//	        		logic.setRunning(false);
+//	        		
+//	        	}
+//	        	if(logic.getRunning())
+//	        	logic.quaydau();
 	        	
 			}
+            catch(Exception ex)
+            {
+            	ex.printStackTrace();
+            }
             view.repaint();
             if (!logic.isRunning()) {
-                timer.stop();
+                stop();
+                view.showoversreen();
             }
         }
     }
@@ -91,6 +120,18 @@ public class GameController implements ActionListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
 
+    }
+
+	public Timer getTimer() {
+		return timer;
+	}
+    public void start()
+    {
+    	this.timer.start();
+    }
+    public void stop()
+    {
+    	this.timer.stop();
     }
 
 }

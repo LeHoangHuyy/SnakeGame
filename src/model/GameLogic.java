@@ -8,8 +8,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import Ex.ObstacleEX;
 import Ex.SelfEX;
@@ -17,7 +23,8 @@ import Ex.WallEX;
 
 public class GameLogic {
 
-    private final int gameWidth;            // Chiều ngang màn hình game
+    private static final Connection DriverManager = null;
+	private final int gameWidth;            // Chiều ngang màn hình game
     private final int gameHeight;           // Chiều cao màn hình game
     private final int tileSize;             // Kích cỡ ô vuông chứa 1 đốt rắn
     private int score;                      // Điểm
@@ -30,19 +37,21 @@ public class GameLogic {
     private final int specialFoodInterval = 1;
     private List<CollisionChecker> collisionChecker;      // Kiểm tra va chạm gồm bản thân, tường,...
     private List<Point> obstacles; //map
+    private List<String> linkmap;
 
     // Khởi tạo giá trị ban đầu
-    public GameLogic(int gameWidth, int gameHeight, int tileSize) throws IOException {
+    public GameLogic(int gameWidth, int gameHeight, int tileSize,List<String> linkmap) throws IOException {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.tileSize = tileSize;
-        initGame();
+        this.linkmap=linkmap;
+        initGame(linkmap.get(0));
     }
 
     // Khởi tạo game
-    public final void initGame() throws IOException {
+    public final void initGame(String linkmap) throws IOException {
         collisionChecker = new ArrayList<>();
-        initialObstracles();
+        initialObstracles(linkmap);
         collisionChecker.add(new WallCollisionChecker());      // Va chạm với tường
         collisionChecker.add(new SelfCollisionChecker());      // Va cạm với bản thân
         collisionChecker.add(new ObstacleCollisionChecker(obstacles));      // Va chạm vật cản
@@ -62,9 +71,9 @@ public class GameLogic {
     }
 
     // Tạo vật cả từ file
-    public void initialObstracles() throws IOException {
+    public void initialObstracles(String linkmap) throws IOException {
         obstacles = new ArrayList<>();
-        File file = new File("src\\text\\map.txt");     // Đường dẫn tương đối
+        File file = new File(linkmap);     // Đường dẫn tương đối
         //System.out.println(System.getProperty("user.dir"));     // Kiểm tra mày đang ở vị trí nào trên cấu trúc thư mục
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -81,8 +90,6 @@ public class GameLogic {
                 }
                 row++;
             }
-        } catch (IOException e) {
-            throw new FileNotFoundException();
         }
     }
 
@@ -291,5 +298,73 @@ public class GameLogic {
       snake.setDirection(a);
 		//move();
 	}
-    
+	public void resetGame() throws IOException {
+        snake.getBody().clear();
+        initGame(linkmap.get(0));
+    }
+	public final String Url="jdbc:mysql://localhost/snake";
+	public final String user="root";
+	public final String password="";
+    public void saveData() throws SQLException
+    {
+//    	final String DRIVE_CLASS ="com.mysql.cj.jdbc.Driver";
+
+    	Connection conn=null;
+    	Statement stmt= null;
+    	try
+    	{
+    		conn = ((java.sql.DriverManager) DriverManager).getConnection(Url,user,password);
+    		//conn = getConnect("localhost", "snake", user, password);
+    		stmt=conn.createStatement();
+    		String sql ="insert into food values('dfsg',20,740,740)";
+    		int x=stmt.executeUpdate(sql);
+    		if(x>=1)
+    		{
+    			System.out.println("yes");
+    		}
+    	}
+    	finally {
+			
+		}
+    	
+    }
+    public void loadGameData() throws SQLException
+    {
+    	Connection conn=null;
+    	Statement stmt= null;
+    	try
+    	{
+    		conn = ((java.sql.DriverManager) DriverManager).getConnection(Url,user,password);
+    		//conn = getConnect("localhost", "snake", user, password);
+    		stmt=conn.createStatement();
+    		String sql ="select * from food";
+    		int x=stmt.executeUpdate(sql);
+    		if(x>=1)
+    		{
+    			System.out.println("yes");
+    		}
+    	}
+    	finally {
+			
+		}
+    }
+//    public Connection getConnect(String sever,String data,String user,String password) throws SQLException
+//    {
+//    	Connection conn = null;
+//    	String Url="jdbc:mysql://"+sever+"/"+data; 
+//    	Properties pro = new Properties();
+//    	pro.put("user", user);
+//    	pro.put("password", password);
+//    	try
+//    	{
+//    		com.mysql.cj.jdbc.Driver driver= new com.mysql.cj.jdbc.Driver();
+//    		conn = driver.connect(Url, pro);
+//    		
+//    	}
+//    	finally {
+//			
+//		}
+//		
+//    	return conn;
+//    }
 }
