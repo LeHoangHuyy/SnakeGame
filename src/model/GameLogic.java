@@ -34,18 +34,18 @@ public class GameLogic {
     private Food normalFood;
     private SpecialFood specialFood;
     private int foodCounter;
-    private final int specialFoodInterval = 1;
+    private final int specialFoodInterval = 5;
     private List<CollisionChecker> collisionChecker;      // Kiểm tra va chạm gồm bản thân, tường,...
     private List<Point> obstacles; //map
-    private List<String> linkmap;
-
+    private String linkmap;
+    
     // Khởi tạo giá trị ban đầu
-    public GameLogic(int gameWidth, int gameHeight, int tileSize,List<String> linkmap) throws IOException {
+    public GameLogic(int gameWidth, int gameHeight, int tileSize,String linkmap) throws IOException {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.tileSize = tileSize;
         this.linkmap=linkmap;
-        initGame(linkmap.get(0));
+        initGame(linkmap);
     }
 
     // Khởi tạo game
@@ -91,6 +91,7 @@ public class GameLogic {
                 row++;
             }
         }
+        
     }
 
     // Cập nhật con răn khi di chuyển
@@ -300,7 +301,7 @@ public class GameLogic {
 	}
 	public void resetGame() throws IOException {
         snake.getBody().clear();
-        initGame(linkmap.get(0));
+        initGame(linkmap);
     }
 	public final String Url="jdbc:mysql://localhost/snake";
 	public final String user="root";
@@ -324,7 +325,10 @@ public class GameLogic {
     		}
     	}
     	finally {
-			
+			if(stmt != null)
+				stmt.close();
+			if(conn != null)
+				conn.close();
 		}
     	
     }
@@ -338,13 +342,13 @@ public class GameLogic {
     		//conn = getConnect("localhost", "snake", user, password);
     		stmt=conn.createStatement();
     		String sql ="select * from food";
-    		int x=stmt.executeUpdate(sql);
-    		if(x>=1)
-    		{
-    			System.out.println("yes");
-    		}
+    		
     	}
     	finally {
+    		if(stmt != null)
+				stmt.close();
+			if(conn != null)
+				conn.close();
 			
 		}
     }

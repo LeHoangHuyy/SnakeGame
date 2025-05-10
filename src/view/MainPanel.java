@@ -17,7 +17,7 @@ public class MainPanel extends JPanel {
 	//private final GameLogic logic ;
 	private CardLayout card;
 	private STscreenPN startsreen;
-	private GamePanel game;
+	private GscreenPN gamecreen;
 	private OVscreenPN oversreen;
 	public MainPanel(GameLogic logic)
 	{
@@ -25,11 +25,11 @@ public class MainPanel extends JPanel {
 		card = new CardLayout();
 		setLayout(card);
 		startsreen = new STscreenPN(logic);
-		game = new GamePanel(logic);
+		gamecreen = new GscreenPN(logic);
 		oversreen = new OVscreenPN(logic);
 		
 		add(startsreen,"startsreen");
-		add(game,"game");
+		add(gamecreen,"gamecreen");
 		add(oversreen,"oversreen");
 		
 		showstartsreen();
@@ -43,12 +43,12 @@ public class MainPanel extends JPanel {
 		this.startsreen = startsreen;
 	}
 
-	public GamePanel getGame() {
-		return game;
+	public GscreenPN getGame() {
+		return gamecreen;
 	}
 
-	public void setGame(GamePanel game) {
-		this.game = game;
+	public void setGame(GscreenPN game) {
+		this.gamecreen = game;
 	}
 
 	public OVscreenPN getoversreen() {
@@ -65,7 +65,7 @@ public class MainPanel extends JPanel {
 	}
 	public void showGame()
 	{
-		card.show(this, "game");
+		card.show(this, "gamecreen");
 	}
 	public void showoversreen()
 	{

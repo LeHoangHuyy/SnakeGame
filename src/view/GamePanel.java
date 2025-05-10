@@ -63,13 +63,13 @@ public class GamePanel extends JPanel {
                 g.fillRect(obstacle.x, obstacle.y, logic.getTileSize(), logic.getTileSize());
             }
 
-            // Vẽ điểm số
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Ink Free", Font.BOLD, 40));
-            FontMetrics metrics = getFontMetrics(g.getFont());
-            g.drawString("Score: " + logic.getScore(),
-                    (logic.getGameWidth() - metrics.stringWidth("Score: " + logic.getScore())) / 2,
-                    g.getFont().getSize());
+//            // Vẽ điểm số
+//            g.setColor(Color.WHITE);
+//            g.setFont(new Font("Ink Free", Font.BOLD, 40));
+//            FontMetrics metrics = getFontMetrics(g.getFont());
+//            g.drawString("Score: " + logic.getScore(),
+//                    (logic.getGameWidth() - metrics.stringWidth("Score: " + logic.getScore())) / 2,
+//                    g.getFont().getSize());
         }
     }
 

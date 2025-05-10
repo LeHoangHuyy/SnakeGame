@@ -40,7 +40,6 @@ public class STscreenPN extends JPanel {
         start = new JButton(resizedIcon);
 
         
-        
         buttonPanel.add(start);
         add(buttonPanel);
 

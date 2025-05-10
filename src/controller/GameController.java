@@ -27,13 +27,17 @@ public class GameController implements ActionListener, KeyListener {
         this.view = view;
         this.view.addKeyListener(this);
         this.timer = new Timer(delay, this);
-        view.getstartsreen().getStart().addActionListener(e ->
+        addEvent();
+        
+    }
+
+    private void addEvent() {
+		// TODO Auto-generated method stub
+    	view.getstartsreen().getStart().addActionListener(e ->
         {
-        	
             view.showGame();
             start();
         });
-        //this.timer.start();
         view.getoversreen().getRestart().addActionListener(new ActionListener() {
 			
 			@Override
@@ -49,9 +53,9 @@ public class GameController implements ActionListener, KeyListener {
 	            start();
 			}
 		});
-    }
+	}
 
-    @Override
+	@Override
     public void actionPerformed(ActionEvent e) {
         if (logic.isRunning()) {
             try {
@@ -65,19 +69,7 @@ public class GameController implements ActionListener, KeyListener {
 				logic.setRunning(false);
 				e1.printStackTrace();
 			} catch (ObstacleEX e1) {
-				logic.setRunning(false);
-//				logic.getSnake().delete();
-//				
-//	        	//score--;
-//	        	if(logic.getScore() < 0 || logic.getSnake().getBody().isEmpty())
-//	        	{
-//	        		logic.setScore(0);
-//	        		logic.setRunning(false);
-//	        		
-//	        	}
-//	        	if(logic.getRunning())
-//	        	logic.quaydau();
-	        	
+				logic.setRunning(false);        	
 			}
             catch(Exception ex)
             {

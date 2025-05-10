@@ -1,6 +1,8 @@
-/view/
-/Test/
-/test/
 /controller/
+/test/
+/Ex/
+/enums/
+/interfaces/
 /model/
-/Image/
+/view/
+/text/

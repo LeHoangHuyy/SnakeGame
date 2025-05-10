@@ -31,7 +31,7 @@ public class OVscreenPN extends JPanel {
 		int w=100;
 		int h=50;
 		int x=(logic.getGameWidth()-w)/2;
-		int y=logic.getGameHeight()/3;
+		int y=logic.getGameHeight()-200;
 		
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/Image/restart.png"));
         // Lấy đối tượng Image từ icon
@@ -45,50 +45,8 @@ public class OVscreenPN extends JPanel {
         restart = new JButton(resizedIcon);
         restart.setBackground(Color.black);
 		restart.setBounds(x,y,w,h);
-		
-//		restart.setContentAreaFilled(false);
-//		restart.setBorderPainted(false);
-//		restart.setFocusPainted(false);
-		
 		add(restart);
-		}
-	
-//	private void initIcon() {
-//		// TODO Auto-generated method stub
-//		icon = new Icon() {
-//			int width=160;
-//			int height=60;
-//			@Override
-//			public void paintIcon(Component c, Graphics g, int x, int y) {
-//				g.setColor(new Color(70, 130, 180)); // Xanh dương
-//		        g.fillRoundRect(x, y, width, height, 20, 20);
-//
-//		        g.setColor(Color.WHITE);
-//		        g.drawRoundRect(x, y, width, height, 20, 20);
-//
-//		        // Vẽ chữ "Restart"
-//		        g.setFont(new Font("Arial", Font.BOLD, 20));
-//		        FontMetrics fm = g.getFontMetrics();
-//		        String text = "Restart";
-//		        int textX = x + (width - fm.stringWidth(text)) / 2;
-//		        int textY = y + (height - fm.getHeight()) / 2 + fm.getAscent();
-//		        g.drawString(text, textX, textY);
-//				
-//			}
-//			
-//			@Override
-//			public int getIconWidth() {
-//				// TODO Auto-generated method stub
-//				return width;
-//			}
-//			
-//			@Override
-//			public int getIconHeight() {
-//				// TODO Auto-generated method stub
-//				return height;
-//			}
-//		};
-//	}
+	}
 
 	@Override
     protected void paintComponent(Graphics g) {
@@ -124,29 +82,29 @@ public class OVscreenPN extends JPanel {
 	public void setScore(JLabel score) {
 		this.score = score;
 	}
-	public void drawRestartButton(Graphics g) {
-	    int buttonWidth = 200;
-	    int buttonHeight = 60;
-	    int x = (logic.getGameWidth() - buttonWidth) / 2;
-	    int y = logic.getGameHeight() / 2 + 100;
-
-	    // Vẽ nền nút
-	    g.setColor(new Color(70, 130, 180)); // Màu xanh dương nhạt
-	    g.fillRoundRect(x, y, buttonWidth, buttonHeight, 30, 30);
-
-	    // Viền nút
-	    g.setColor(Color.WHITE);
-	    g.drawRoundRect(x, y, buttonWidth, buttonHeight, 30, 30);
-
-	    // Chữ "Restart"
-	    g.setFont(new Font("Arial", Font.BOLD, 24));
-	    FontMetrics fm = g.getFontMetrics();
-	    String text = "Restart";
-	    int textX = x + (buttonWidth - fm.stringWidth(text)) / 2;
-	    int textY = y + ((buttonHeight - fm.getHeight()) / 2) + fm.getAscent();
-
-	    g.setColor(Color.WHITE);
-	    g.drawString(text, textX, textY);
-	}
+//	public void drawRestartButton(Graphics g) {
+//	    int buttonWidth = 200;
+//	    int buttonHeight = 60;
+//	    int x = (logic.getGameWidth() - buttonWidth) / 2;
+//	    int y = logic.getGameHeight() / 2 + 100;
+//
+//	    // Vẽ nền nút
+//	    g.setColor(new Color(70, 130, 180)); // Màu xanh dương nhạt
+//	    g.fillRoundRect(x, y, buttonWidth, buttonHeight, 30, 30);
+//
+//	    // Viền nút
+//	    g.setColor(Color.WHITE);
+//	    g.drawRoundRect(x, y, buttonWidth, buttonHeight, 30, 30);
+//
+//	    // Chữ "Restart"
+//	    g.setFont(new Font("Arial", Font.BOLD, 24));
+//	    FontMetrics fm = g.getFontMetrics();
+//	    String text = "Restart";
+//	    int textX = x + (buttonWidth - fm.stringWidth(text)) / 2;
+//	    int textY = y + ((buttonHeight - fm.getHeight()) / 2) + fm.getAscent();
+//
+//	    g.setColor(Color.WHITE);
+//	    g.drawString(text, textX, textY);
+//	}
 	
 }
