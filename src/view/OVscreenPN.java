@@ -3,10 +3,13 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -19,6 +22,7 @@ import model.GameLogic;
 
 public class OVscreenPN extends JPanel {
 	private JButton restart;
+	private JButton exit;
 	private JLabel score;
 	private GameLogic logic;
 	//private Icon icon;
@@ -28,24 +32,46 @@ public class OVscreenPN extends JPanel {
 		//initIcon();
 		this.setBackground(Color.black);
 		this.setLayout(null);
-		int w=100;
+		int w=120;
 		int h=50;
 		int x=(logic.getGameWidth()-w)/2;
 		int y=logic.getGameHeight()-200;
 		
 		ImageIcon originalIcon = new ImageIcon(getClass().getResource("/Image/restart.png"));
-        // Lấy đối tượng Image từ icon
         Image originalImage = originalIcon.getImage();
-
-        // Resize ảnh
-        int newWidth = 160;
+        int newWidth = 120;
         int newHeight = 50;
         Image resizedImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(resizedImage);
         restart = new JButton(resizedIcon);
+        restart.setPreferredSize(new Dimension(newWidth, newHeight));
         restart.setBackground(Color.black);
 		restart.setBounds(x,y,w,h);
+		
+		ImageIcon exitIcon = new ImageIcon(getClass().getResource("/Image/exit.png"));
+        Image exitImage = exitIcon.getImage();
+        Image resizedExit = exitImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        ImageIcon resizedExitIcon = new ImageIcon(resizedExit);
+        exit = new JButton(resizedExitIcon);
+        exit.setPreferredSize(new Dimension(newWidth, newHeight));
+        exit.setBounds(x,y+60,w,h);
+		
 		add(restart);
+		add(exit);
+		addEvent();
+	}
+
+	private void addEvent() {
+		// TODO Auto-generated method stub
+		exit.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				System.exit(0);
+			}
+		});
+		
 	}
 
 	@Override
