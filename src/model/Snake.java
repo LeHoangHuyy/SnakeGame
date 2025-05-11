@@ -68,7 +68,7 @@ public class Snake implements Movable {
 	public void grow() {
 		body.add(new Point(body.get(body.size() - 1)));
 	}
-
+	
 	public void grow(int count) {
 		for (int i = 0; i < count; i++) {
 			body.add(new Point(body.get(body.size() - 1)));
@@ -91,6 +91,11 @@ public class Snake implements Movable {
 	public Direction getdi() {
 		return direction;
 	}
+	public int  getleght()
+	{
+		return body.size();
+	}
+	
 
 
 	

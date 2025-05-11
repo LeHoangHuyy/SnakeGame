@@ -56,7 +56,7 @@ public class SnakeGame extends JFrame {
     	map.add("src\\text\\map.txt");
     	map.add("src\\text\\map2.txt");
     	map.add("src\\text\\map3.txt");
-        new SnakeGame(map.get(1));
+        new SnakeGame(map.get(0));
     	// GameLogic logic = new GameLogic(740, 740, 20,map);
     	// logic.saveData();
     }

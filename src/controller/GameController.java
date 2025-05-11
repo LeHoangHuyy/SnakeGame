@@ -75,6 +75,7 @@ public class GameController implements ActionListener, KeyListener {
             {
             	ex.printStackTrace();
             }
+            
             view.repaint();
             if (!logic.isRunning()) {
                 stop();
@@ -106,7 +107,17 @@ public class GameController implements ActionListener, KeyListener {
                 logic.changeDirection(Direction.LEFT);
             case KeyEvent.VK_D ->
                 logic.changeDirection(Direction.RIGHT);
+            case KeyEvent.VK_C ->
+            {
+            	if(logic.getFood().getLoai()==1)
+            	{
+            		logic.getFood().setLoai(2);
+            	}
+            }
+            
+          
         }
+        
     }
 
     @Override

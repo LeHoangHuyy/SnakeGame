@@ -35,14 +35,26 @@ public class GamePanel extends JPanel {
             // Vẽ thức ăn
             Point food = logic.getFoodPosition();
             if(food.x >= 0 && food.y >= 0){
-
                 // Vẽ thức ăn đặc biệt
                 if (logic.getFoodCounter() % logic.getSpecialFoodInterval() == 0 && logic.getFoodCounter() != 0){
-                	g.setColor(Color.yellow);
+                	g.setColor(Color.white
+                			);
                     g.fillOval(food.x, food.y, logic.getTileSize() + 5, logic.getTileSize() + 5);
                     
-                } else {        // Vẽ thức ăn thường
-                	g.setColor(Color.red);
+                }// Vẽ thức ăn thường
+                else {        
+                	if(logic.getFood().getLoai()==0)
+                	{
+                		g.setColor(Color.blue);
+                	}
+                	else if(logic.getFood().getLoai()==1)
+                	{
+                		g.setColor(Color.red);
+                	}
+                	else
+                	{
+                		g.setColor(Color.yellow);
+                	}
                     g.fillOval(food.x, food.y, logic.getTileSize(), logic.getTileSize());
                     
                 }

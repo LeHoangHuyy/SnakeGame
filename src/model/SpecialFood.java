@@ -12,7 +12,7 @@ public class SpecialFood extends Food {
     public void onEat(Snake snake, GameLogic gameLogic) {
         snake.grow(pointValue);
         //snake.getBody().set(0, getPosition());
-        gameLogic.increaseScore(pointValue);
+       // gameLogic.increaseScore(pointValue);
         createRandomPosition(snake.getBody(), gameLogic.getObstacles());
     }
 }

@@ -30,7 +30,7 @@ public class GameLogic {
     private int score;                      // Điểm
     private boolean isRunning;              // Kiểm tra di chuyển 
     private Snake snake;
-    private final int snakeLength = 6;      // Khởi tạo chiều dài rắn ban đầu
+    private final int snakeLength = 3;      // Khởi tạo chiều dài rắn ban đầu
     private Food normalFood;
     private SpecialFood specialFood;
     private int foodCounter;
@@ -128,28 +128,11 @@ public class GameLogic {
             normalFood.createRandomPosition(snake.getBody(), obstacles);  // Xuất hiện thức ăn thường sau khi ăn food đặc biệt
             specialFood.getPosition().setLocation(-1, -1);     // Food đặc biệt xuất hiện ở ngoài map
         }
-        
-//        catch (ObstacleEX e)
-//        {
-//        	snake.delete();
-//        	//score--;
-//        	if(score < 0 || snake.getBody().isEmpty())
-//        	{
-//        		score=0;
-//        		isRunning=false;
-//        		return;
-//        	}
-//        	snake.quaydau();
-//        	
-//        }
-//        catch(SelfEX e)
-//        {
-//        	isRunning =false;
-//        }
-//        catch(WallEX e)
-//        {
-//        	isRunning = false;
-//        }
+        if(score<0)
+        {
+        	isRunning=false;
+        	return;
+        }
     }
     // Thay đổi hướng di chuyển
     public void changeDirection(Direction newDirection) {
@@ -203,8 +186,8 @@ public class GameLogic {
     }
 
     // Tăng pointValue điểm
-    public void increaseScore(int pointValue) {
-        score += pointValue;
+    public void increaseScoreRed() {
+        score *=2;
     }
 
     // Trả về vị trí thức ăn
@@ -371,4 +354,8 @@ public class GameLogic {
 //		
 //    	return conn;
 //    }
+    public Food getFood()
+    {
+    	return normalFood;
+    }
 }
