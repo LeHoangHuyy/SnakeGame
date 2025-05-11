@@ -7,6 +7,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.List;
+
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import model.GameLogic;
 
@@ -19,6 +21,7 @@ public class GamePanel extends JPanel {
         setPreferredSize(new Dimension(logic.getGameWidth(), logic.getGameHeight()));
         setBackground(Color.BLACK);
         setFocusable(true);
+        //setBorder(BorderFactory.createLineBorder(Color.red));
     }
 
     @Override
@@ -32,14 +35,26 @@ public class GamePanel extends JPanel {
             // Vẽ thức ăn
             Point food = logic.getFoodPosition();
             if(food.x >= 0 && food.y >= 0){
-
                 // Vẽ thức ăn đặc biệt
                 if (logic.getFoodCounter() % logic.getSpecialFoodInterval() == 0 && logic.getFoodCounter() != 0){
-                	g.setColor(Color.yellow);
+                	g.setColor(Color.white
+                			);
                     g.fillOval(food.x, food.y, logic.getTileSize() + 5, logic.getTileSize() + 5);
                     
-                } else {        // Vẽ thức ăn thường
-                	g.setColor(Color.red);
+                }// Vẽ thức ăn thường
+                else {        
+                	if(logic.getFood().getLoai()==0)
+                	{
+                		g.setColor(Color.blue);
+                	}
+                	else if(logic.getFood().getLoai()==1)
+                	{
+                		g.setColor(Color.red);
+                	}
+                	else
+                	{
+                		g.setColor(Color.yellow);
+                	}
                     g.fillOval(food.x, food.y, logic.getTileSize(), logic.getTileSize());
                     
                 }
@@ -60,33 +75,31 @@ public class GamePanel extends JPanel {
                 g.fillRect(obstacle.x, obstacle.y, logic.getTileSize(), logic.getTileSize());
             }
 
-            // Vẽ điểm số
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Ink Free", Font.BOLD, 40));
-            FontMetrics metrics = getFontMetrics(g.getFont());
-            g.drawString("Score: " + logic.getScore(),
-                    (logic.getGameWidth() - metrics.stringWidth("Score: " + logic.getScore())) / 2,
-                    g.getFont().getSize());
-        } else {
-            gameOver(g);
+//            // Vẽ điểm số
+//            g.setColor(Color.WHITE);
+//            g.setFont(new Font("Ink Free", Font.BOLD, 40));
+//            FontMetrics metrics = getFontMetrics(g.getFont());
+//            g.drawString("Score: " + logic.getScore(),
+//                    (logic.getGameWidth() - metrics.stringWidth("Score: " + logic.getScore())) / 2,
+//                    g.getFont().getSize());
         }
     }
 
-    private void gameOver(Graphics g) {
-        // Thông báo Game Over
-        g.setColor(Color.RED);
-        g.setFont(new Font("Ink Free", Font.BOLD, 75));
-        FontMetrics metrics1 = getFontMetrics(g.getFont());
-        g.drawString("Game Over",
-                (logic.getGameWidth() - metrics1.stringWidth("Game Over")) / 2,
-                logic.getGameHeight() / 2);
-
-        // Thông báo điểm số
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Ink Free", Font.BOLD, 40));
-        FontMetrics metrics2 = getFontMetrics(g.getFont());
-        g.drawString("Score: " + logic.getScore(),
-                (logic.getGameWidth() - metrics2.stringWidth("Score: " + logic.getScore())) / 2,
-                g.getFont().getSize() * 2);
-    }
+//    private void gameOver(Graphics g) {
+//        // Thông báo Game Over
+//        g.setColor(Color.RED);
+//        g.setFont(new Font("Ink Free", Font.BOLD, 75));
+//        FontMetrics metrics1 = getFontMetrics(g.getFont());
+//        g.drawString("Game Over",
+//                (logic.getGameWidth() - metrics1.stringWidth("Game Over")) / 2,
+//                logic.getGameHeight() / 2);
+//
+//        // Thông báo điểm số
+//        g.setColor(Color.WHITE);
+//        g.setFont(new Font("Ink Free", Font.BOLD, 40));
+//        FontMetrics metrics2 = getFontMetrics(g.getFont());
+//        g.drawString("Score: " + logic.getScore(),
+//                (logic.getGameWidth() - metrics2.stringWidth("Score: " + logic.getScore())) / 2,
+//                g.getFont().getSize() * 2);
+//    }
 }

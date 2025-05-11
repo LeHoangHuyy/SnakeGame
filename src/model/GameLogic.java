@@ -1,3 +1,4 @@
+
 package model;
 
 import enums.Direction;
@@ -8,40 +9,50 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import model.collision.ObstacleCollisionChecker;
-import model.collision.SelfCollisionChecker;
-import model.collision.WallCollisionChecker;
+import java.util.Properties;
+
+import Ex.ObstacleEX;
+import Ex.SelfEX;
+import Ex.WallEX;
 
 public class GameLogic {
 
-    private final int gameWidth;            // Chiều ngang màn hình game
+    private static final Connection DriverManager = null;
+	private final int gameWidth;            // Chiều ngang màn hình game
     private final int gameHeight;           // Chiều cao màn hình game
     private final int tileSize;             // Kích cỡ ô vuông chứa 1 đốt rắn
     private int score;                      // Điểm
     private boolean isRunning;              // Kiểm tra di chuyển 
     private Snake snake;
-    private final int snakeLength = 6;      // Khởi tạo chiều dài rắn ban đầu
+    private final int snakeLength = 3;      // Khởi tạo chiều dài rắn ban đầu
     private Food normalFood;
     private SpecialFood specialFood;
     private int foodCounter;
-    private final int specialFoodInterval = 3;
+    private final int specialFoodInterval = 5;
     private List<CollisionChecker> collisionChecker;      // Kiểm tra va chạm gồm bản thân, tường,...
-    private List<Point> obstacles;
-
+    private List<Point> obstacles; //map
+    private String linkmap;
+    
     // Khởi tạo giá trị ban đầu
-    public GameLogic(int gameWidth, int gameHeight, int tileSize) throws IOException {
+    public GameLogic(int gameWidth, int gameHeight, int tileSize,String linkmap) throws IOException {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.tileSize = tileSize;
-        initGame();
+        this.linkmap=linkmap;
+        initGame(linkmap);
     }
 
     // Khởi tạo game
-    public final void initGame() throws IOException {
+    public final void initGame(String linkmap) throws IOException {
         collisionChecker = new ArrayList<>();
-        initialObstracles();
+        initialObstracles(linkmap);
         collisionChecker.add(new WallCollisionChecker());      // Va chạm với tường
         collisionChecker.add(new SelfCollisionChecker());      // Va cạm với bản thân
         collisionChecker.add(new ObstacleCollisionChecker(obstacles));      // Va chạm vật cản
@@ -54,15 +65,16 @@ public class GameLogic {
         normalFood.createRandomPosition(snake.getBody(), obstacles);
 
         specialFood = new SpecialFood(gameWidth, gameHeight, tileSize);
+        specialFood.getPosition().setLocation(-1, -1);          // Đặt thức ăn đặc biệt ở ngoài map
 
         score = 0;
         isRunning = true;
     }
 
     // Tạo vật cả từ file
-    public void initialObstracles() throws IOException {
+    public void initialObstracles(String linkmap) throws IOException {
         obstacles = new ArrayList<>();
-        File file = new File("src\\resources\\map.txt");     // Đường dẫn tương đối
+        File file = new File(linkmap);     // Đường dẫn tương đối
         //System.out.println(System.getProperty("user.dir"));     // Kiểm tra mày đang ở vị trí nào trên cấu trúc thư mục
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -79,49 +91,50 @@ public class GameLogic {
                 }
                 row++;
             }
-        } catch (IOException e) {
-            throw new FileNotFoundException();
         }
+        
     }
 
     // Cập nhật con răn khi di chuyển
-    public void update() {
+    public void update() throws SelfEX, WallEX,ObstacleEX {
         if (!isRunning) {
             return;
         }
 
         snake.move();
-
+        try
+        {
+        	for (CollisionChecker checker : collisionChecker)
+            checker.checkCollision(snake, gameWidth, gameHeight);
+        }
+        finally {
+			
+		}
         if (snake.isEating(normalFood.getPosition())) {     // Nếu rắn ăn phải thức ăn thường
             normalFood.onEat(snake, this);          // Rắn ăn thức ăn
             foodCounter++;                      // Tăng biến đếm nếu rắn không ăn thức ăn đặc biệt
 
             if (foodCounter % specialFoodInterval == 0) {        // Đến 1 mức điểm nào đó thì xuất hiện thức ăn đặc biệt
                 specialFood.createRandomPosition(snake.getBody(), obstacles);
+                normalFood.getPosition().setLocation(-1, -1);
+
             } else {
+                specialFood.getPosition().setLocation(-1, -1);// Không đến mức điểm nào đó thì thức ăn xuất hiện ở ngoài map
                 normalFood.createRandomPosition(snake.getBody(), obstacles);
+                
             }
         } else if (snake.isEating(specialFood.getPosition())) {      // Nếu ăn ăn thức ăn đặc biệt
             specialFood.onEat(snake, this);     // Rắn ăn thức ăn
             foodCounter = 0;                // Rest biến đếm về 0
             normalFood.createRandomPosition(snake.getBody(), obstacles);  // Xuất hiện thức ăn thường sau khi ăn food đặc biệt
+            specialFood.getPosition().setLocation(-1, -1);     // Food đặc biệt xuất hiện ở ngoài map
         }
-        // Check  va chạm
-        if (checkCollision()) {          
-            isRunning = false;
+        if(score<0 || snake.getBody().isEmpty())
+        {
+        	isRunning=false;
+        	return;
         }
     }
-
-    // Kiểm tra va chạm
-    public boolean checkCollision() {
-        for (CollisionChecker checker : collisionChecker) {
-            if (checker.checkCollision(snake, gameWidth, gameHeight)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // Thay đổi hướng di chuyển
     public void changeDirection(Direction newDirection) {
         Direction currDirection = snake.getDirection();
@@ -172,17 +185,20 @@ public class GameLogic {
     public void increaseScore() {
         score++;
     }
-
+    public void increaseScore(int diem) {
+        score+=diem;
+    }
     // Tăng pointValue điểm
-    public void increaseScore(int pointValue) {
-        score += pointValue;
+    public void increaseScoreRed() {
+        score *=2;
     }
 
     // Trả về vị trí thức ăn
     public Point getFoodPosition(){
         if (foodCounter % specialFoodInterval == 0 && foodCounter != 0){
             return specialFood.getPosition();
-        }
+        } 
+        
         return normalFood.getPosition();
     }
     
@@ -199,5 +215,150 @@ public class GameLogic {
     // Trả về list vị trí vật cản
     public List<Point> getObstacles() {
         return obstacles;
+    }
+
+	public Snake getSnake() {
+		return snake;
+	}
+
+	public void setSnake(Snake snake) {
+		this.snake = snake;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+	public boolean getRunning()
+	{
+		return isRunning;
+	}
+	//quay dau
+	public void quaydau() {
+		switch (snake.getDirection()) {
+		case UP -> doichieu(Direction.RIGHT,Direction.LEFT);
+		case DOWN -> doichieu(Direction.RIGHT,Direction.LEFT);
+		case LEFT -> doichieu(Direction.UP,Direction.DOWN);
+		case RIGHT -> doichieu(Direction.UP,Direction.DOWN);
+		}
+	}
+	public void doichieu(Direction a, Direction b)
+	{
+    Point head = snake.getHeadPosition();
+      //Point headnext;
+      int newX = (int) head.getX();
+      int newY = (int) head.getY();
+      switch (a) {
+      case UP ->
+          newY -= snake.gettitle();
+      case DOWN ->
+          newY += snake.gettitle();
+      case LEFT ->
+          newX -= snake.gettitle();
+      case RIGHT ->
+          newX += snake.gettitle();
+      }
+      Point headnext = new Point(newX, newY);
+      
+      for (Point obstacle : obstacles) {
+          if (headnext.equals(obstacle)) {
+              snake.setDirection(b);
+              return;
+          }
+      }
+      if(snake.getBody().size()>3)
+      {
+      	
+          List<Point> body = snake.getBody();
+          for (int i = 1; i < body.size(); i++) {
+              if (headnext.equals(body.get(i))) {
+            	  snake.setDirection(b);
+                  return;
+                  
+              }
+          }
+      }
+      
+      snake.setDirection(a);
+		//move();
+	}
+	public void resetGame() throws IOException {
+        snake.getBody().clear();
+        initGame(linkmap);
+    }
+	public final String Url="jdbc:mysql://localhost/snake";
+	public final String user="root";
+	public final String password="";
+    public void saveData() throws SQLException
+    {
+//    	final String DRIVE_CLASS ="com.mysql.cj.jdbc.Driver";
+
+    	Connection conn=null;
+    	Statement stmt= null;
+    	try
+    	{
+    		conn = ((java.sql.DriverManager) DriverManager).getConnection(Url,user,password);
+    		//conn = getConnect("localhost", "snake", user, password);
+    		stmt=conn.createStatement();
+    		String sql ="insert into food values('dfsg',20,740,740)";
+    		int x=stmt.executeUpdate(sql);
+    		if(x>=1)
+    		{
+    			System.out.println("yes");
+    		}
+    	}
+    	finally {
+			if(stmt != null)
+				stmt.close();
+			if(conn != null)
+				conn.close();
+		}
+    	
+    }
+    public void loadGameData() throws SQLException
+    {
+    	Connection conn=null;
+    	Statement stmt= null;
+    	try
+    	{
+    		conn = ((java.sql.DriverManager) DriverManager).getConnection(Url,user,password);
+    		//conn = getConnect("localhost", "snake", user, password);
+    		stmt=conn.createStatement();
+    		String sql ="select * from food";
+    		
+    	}
+    	finally {
+    		if(stmt != null)
+				stmt.close();
+			if(conn != null)
+				conn.close();
+			
+		}
+    }
+//    public Connection getConnect(String sever,String data,String user,String password) throws SQLException
+//    {
+//    	Connection conn = null;
+//    	String Url="jdbc:mysql://"+sever+"/"+data; 
+//    	Properties pro = new Properties();
+//    	pro.put("user", user);
+//    	pro.put("password", password);
+//    	try
+//    	{
+//    		com.mysql.cj.jdbc.Driver driver= new com.mysql.cj.jdbc.Driver();
+//    		conn = driver.connect(Url, pro);
+//    		
+//    	}
+//    	finally {
+//			
+//		}
+//		
+//    	return conn;
+//    }
+    public Food getFood()
+    {
+    	return normalFood;
     }
 }

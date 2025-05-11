@@ -12,6 +12,8 @@ public class Food implements Eatable {
     private final int gameWidth;            // Chiều ngang màn hình game
     private final int gameHeight;           // Chiều cao màn hình game
     private final Random random;            // Random
+    private int loai;
+    private final int soloai=3;
 
     // Khởi tạo giá trị ban đầu
     public Food(int gameWidth, int gameHeight, int tileSize) {
@@ -19,6 +21,7 @@ public class Food implements Eatable {
         this.gameHeight = gameHeight;
         this.tileSize = tileSize;
         this.random = new Random();
+        //Random rd = new Random();
         createRandomPosition(null, null);
     }
 
@@ -59,12 +62,40 @@ public class Food implements Eatable {
                 }
             }
         } while (onSnake || onObstacle);
+        loai=random.nextInt(soloai);
     }
 
     // Thức ăn đã được rắn ăn
     @Override
     public void onEat(Snake snake, GameLogic gameLogic) {
-        snake.grow();
-        gameLogic.increaseScore();
+    	if(loai==0)
+        {
+    		snake.grow();
+            gameLogic.increaseScore();
+        }
+        //createRandomPosition(snake.getBody(), gameLogic.getObstacles());
+    	else if(loai==1)
+    	{
+    		//snake.delete();
+            gameLogic.increaseScore(-1);
+    	}
+    	else
+    	{
+    		snake.grow(snake.getleght());
+    		gameLogic.increaseScoreRed();
+    	}
     }
+
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+
+	public int getLoai() {
+		return loai;
+	}
+
+	public void setLoai(int loai) {
+		this.loai = loai;
+	}
+    
 }
