@@ -189,9 +189,7 @@ public class GameLogic {
         score+=diem;
     }
     // Tăng pointValue điểm
-    public void increaseScoreRed() {
-        score *=2;
-    }
+    
 
     // Trả về vị trí thức ăn
     public Point getFoodPosition(){

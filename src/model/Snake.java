@@ -11,6 +11,7 @@ public class Snake implements Movable {
 	private final List<Point> body; // Chứa các đốt của thân rắn
 	private Direction direction; // Hướng di chuyển tiếp theo lên xuống trái phải của rắn
 	private final int tileSize; // Kích thước ô vuông chứa 1 đốt rắn
+	private int length;
 
 	// Khởi tạo giá trị cho con rắn, rắn hướng mặt về phía bên phải
 	public Snake(int startX, int startY, int initLength, int tileSize) {
@@ -80,8 +81,10 @@ public class Snake implements Movable {
 		return body.get(0).equals(foodPosition);
 	}
 
-	public void delete() {
-		body.remove(0);
+	public void delete(int lenghtdelete) {
+		for (int i = 0; i <lenghtdelete; i++) {
+			body.remove(0);
+		}
 	}
 
 	public int gettitle() {

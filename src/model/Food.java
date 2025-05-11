@@ -76,13 +76,13 @@ public class Food implements Eatable {
         //createRandomPosition(snake.getBody(), gameLogic.getObstacles());
     	else if(loai==1)
     	{
-    		//snake.delete();
-            gameLogic.increaseScore(-1);
+    		snake.delete(snake.getleght()/2);
+            //gameLogic.increaseScore(-snake.getleght());
     	}
     	else
     	{
     		snake.grow(snake.getleght());
-    		gameLogic.increaseScoreRed();
+    		gameLogic.increaseScore(gameLogic.getScore());
     	}
     }
 
